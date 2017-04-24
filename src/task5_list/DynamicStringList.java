@@ -1,4 +1,4 @@
-package task5_list;
+package task;
 import java.util.Scanner;
 
 interface SimpleList{
@@ -21,6 +21,7 @@ public class DynamicStringList implements SimpleList {
     }
 
     DynamicStringList() {
+        str = new String[1];
     }
 
     @Override
@@ -56,11 +57,11 @@ public class DynamicStringList implements SimpleList {
     }
 
     @Override
-    public String get(int id) {
-        if(id<=count)
+    public String get(int id) throws IndexOutOfBoundsException{
+        if((id<=count)&&(id>0))
             return str[id-1];
         else
-            return "There is not the string which you want to get !";
+            throw new IndexOutOfBoundsException();
     }
 
     @Override
@@ -76,18 +77,16 @@ public class DynamicStringList implements SimpleList {
         return s;
     }
 
-    public String  remove(int id) {
+    @Override
+    public String remove(int id) throws IndexOutOfBoundsException{
         String s;
         String []mas;
-        if(id<=count)
+        if((id<=count)&&(id>0))
         {  s = str[id-1];
-            mas=new String [count-1];
-            System.arraycopy (str, 0, mas, 0, id-1);
-            System.arraycopy (str, id, mas, id-1, count-id);
+            System.arraycopy (str, id, str, id-1, count-id);
             count--;
-            str=mas;
         }
-        else  s="There is not the string which you demand to remove !";
+        else throw new IndexOutOfBoundsException();
         return s;
     }
 
@@ -101,6 +100,7 @@ public class DynamicStringList implements SimpleList {
     public String toString() {
         for(int i=0; i<count; i++)
             System.out.println(str[i]);
+        System.out.print("\n");
         return null;
     }
 
@@ -115,13 +115,28 @@ public class DynamicStringList implements SimpleList {
 
         System.out.println("Your strings:");
         ob1.toString();
-        System.out.println("Your last string: " + ob1.get());
-        System.out.print("Write number of string:");
-        num=in.nextInt();
-        System.out.println("Your "+num+" string: "+ob1.get(num));
-        System.out.print("Write number of string, which you want to remove:");
-        num=in.nextInt();
-        ob1.remove(num);
+        System.out.println("Your last string: " + ob1.get()+ "\n");
+
+        for(int i=0; i<2;i++)
+        {
+            System.out.print("Write number of string:");
+            num=in.nextInt();
+            try{
+                switch (i){
+                    case 0:
+                        System.out.println("Your " + num + " string: " + ob1.get(num) + "\n");
+                        break;
+                    case 1:
+                        System.out.println("Removing of your string: " + ob1.remove(num)+"\n");
+                        break;
+                }
+            } catch (IndexOutOfBoundsException e)
+            {
+                System.out.println("Your string is not exist!"+"\n");
+            }
+
+        }
+
         System.out.println("Your strings:");
         ob1.toString();
         System.out.println("Removing of your last string...");
